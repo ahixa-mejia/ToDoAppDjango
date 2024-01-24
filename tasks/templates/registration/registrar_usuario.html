@@ -1,0 +1,205 @@
+<style>
+    body {
+        background-color: #222;
+        background-attachment: fixed;
+        background-size: cover;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .form {
+        background-color: #333;
+        border-radius: 20px;
+        box-sizing: border-box;
+        height: 500px;
+        padding: 20px;
+        width: 500px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+    .title {
+        color: #eee;
+        font-family: sans-serif;
+        font-size: 36px;
+        font-weight: 600;
+        margin-top: 30px;
+    }
+
+    .subtitle {
+        color: #eee;
+        font-family: sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: 10px;
+    }
+
+    .input-container {
+        height: 50px;
+        position: relative;
+        width: 100%;
+    }
+
+    .ic1 {
+        margin-top: 40px;
+    }
+
+    .ic2 {
+        margin-top: 30px;
+    }
+
+    .input {
+        background-color: #ffffff;
+        border-radius: 12px;
+        border: 0;
+        box-sizing: border-box;
+        color: #000000;
+        font-size: 18px;
+        height: 100%;
+        outline: 0;
+        padding: 4px 20px 0;
+        width: 100%;
+    }
+
+    .cut {
+        background-color: #15172b;
+        border-radius: 10px;
+        height: 20px;
+        left: 20px;
+        position: absolute;
+        top: -20px;
+        transform: translateY(0);
+        transition: transform 200ms;
+        width: 76px;
+    }
+
+    .cut-short {
+        width: 135px;
+    }
+
+    .iLabel {
+        color: #000000;
+        font-family: sans-serif;
+        left: 20px;
+        line-height: 14px;
+        pointer-events: none;
+        position: absolute;
+        transform-origin: 0 50%;
+        transition: transform 200ms, color 200ms;
+        top: 20px;
+    }
+
+    .input:focus ~ .cut {
+        transform: translateY(8px);
+    }
+
+    .input:focus ~ .iLabel {
+        transform: translateY(-30px) translateX(10px) scale(0.75);
+    }
+
+    .input:not(:focus) ~ .iLabel {
+        color: #808097;
+    }
+
+    .input:focus ~ .iLabel {
+        color: #2fb4dc;
+    }
+
+    .submit {
+        background-color: #08d;
+        border-radius: 12px;
+        border: 0;
+        box-sizing: border-box;
+        color: #eee;
+        cursor: pointer;
+        font-size: 18px;
+        height: 50px;
+        margin-top: 38px;
+        text-align: center;
+        width: 100%;
+    }
+
+    .submit:active {
+        background-color: #06b;
+    }
+
+    .login-link {
+        margin-top: 20px;
+        color: #eee;
+        font-family: sans-serif;
+        text-align: center;
+    }
+
+    .login-link a {
+        color: #2fdcdc;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+    #passwordHelp {
+        color: #808097;
+        font-family: sans-serif;
+        font-size: 14px;
+        margin-top: 5px;  /* Ajusta según sea necesario */
+    }
+    
+</style>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const passwordInput = document.getElementById('id_password1');
+        const passwordHelp = document.getElementById('passwordHelp');
+
+        passwordInput.addEventListener('input', function () {
+            const passwordStrength = zxcvbn(passwordInput.value);
+            passwordHelp.innerHTML = `Fortaleza de la contraseña: ${passwordStrength.score}/4 - ${passwordStrength.feedback.suggestions.join(' ')}`;
+        });
+    });
+</script>
+
+<body>
+   
+    
+<div class="form">
+    <div class="title">Bienvenido/a</div>
+    <div class="subtitle">Crea tu cuenta!</div>
+
+    <form method="post" action="{% url 'registrar_usuario' %}">
+        {% csrf_token %}
+        <div class="input-container ic1">
+            <input placeholder="" type="text" class="input" name="username" required>
+            <div class="cut"></div>
+            <label class="iLabel" for="firstname">Usuario</label>
+        </div>
+
+        <div class="input-container ic2">
+            <input placeholder="" type="password" class="input" name="password1" required>
+            <div class="cut"></div>
+            <label class="iLabel" for="password">Contraseña</label>
+        </div>
+        <small id="passwordHelp" class="form-text text-muted">La contraseña debe tener al menos 8 caracteres y no puede ser completamente numérica.</small>
+
+        <div class="input-container ic2">
+            <input placeholder="" type="password" class="input" name="password2" required>
+            <div class="cut cut-short"></div>
+            <label class="iLabel" for="password">Confirmar contraseña</label>
+        </div>
+
+        <button class="submit" type="submit">Enviar</button>
+    </form>
+
+    <div class="login-link">
+        <p>¿Ya tienes una cuenta? <a href="{% url 'ingresar' %}">Inicia Sesión</a></p>
+    </div>
+</div>
+</body>
+</html>

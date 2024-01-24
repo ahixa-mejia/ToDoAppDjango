@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tareas</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #222;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            width: 500px;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            color: #eeeeee;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 80%;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            border: 1px solid #555;
+            color: #000000;
+        }
+
+        input[type="submit"] {
+            padding: 10px;
+            width: 80%;
+            background-color: #21bace;
+            color: #000000;
+            border: none;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #21bace;
+        }
+
+        div {
+            margin-bottom: 10px;
+            background-color: #424242;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #fcfcfc;
+            margin-right: 10px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        p {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .elemento {
+            margin-bottom: 10px;
+        }
+
+        #login {
+            margin-right: 10px;
+        }
+
+        .btn-registro {
+            text-decoration: none;
+            padding: 10px;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-registro:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TO DO</h1>
+
+        <form method="POST" action="/">
+            {% csrf_token %}
+            {{form.title}}
+            <br>
+            <input type="submit" value="Crear Tarea">
+        </form>  
+
+        {% for task in tasks %}
+            <div>
+                <a href="{% url 'update_task' task.id %}">Actualizar</a>
+                <a href="{% url 'delete' task.id %}">Eliminar</a>
+
+                {% if task.complete %}
+                    <p><s>{{ task }}</s></p>
+                {% else %}
+                    <span>{{ task }}</span>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <hr>
+
+        {% if user.is_authenticated %}
+            <div class="elemento">
+                <a href="{% url 'login' %}" id="login">Salir</a>
+                <h3 class="username">¡Hola {{ user.username | upper}}!</h3>
+            </div>
+        {% else %}
+            <a href="{% url 'ingresar' %}" id="login">Iniciar Sesion</a>
+            <a href="{% url 'registrar_usuario' %}" class="btn-registro">Registrarse</a>    
+        {% endif %}
+    </div>
+</body>
+</html>
